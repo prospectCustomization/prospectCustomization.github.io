@@ -1,0 +1,44 @@
+<html>
+	<head>
+  		<meta http-equiv="refresh" content="">
+  		<link rel="stylesheet" href="MGRI.css">
+	</head>
+	<body>
+
+		<h1 id="header">MGR/I (swingpath accuracy) calculations</h1>
+		<form id="racquetSpecs">
+			<h2>Racquet specs:</h2>
+			<label>Swingweight:</label>
+			<input type="number" id="swingweight" oninput="specsForm()"><br>
+			<!--min="200" max="450" Min and max only work when submitting the form-->
+			<label>Balance:</label>
+			<input type="number" id="balance" oninput="specsForm()"><br>
+			<label>Mass:</label>
+			<input type="number" id="mass" oninput="specsForm()"><br>
+
+		</form>
+
+		<h4>Current MGR/I:</h4>
+			<label>0 cm (buttcap) axis:</label> 
+			<input type="number" id="mgri" disabled><br>
+			<label>10 cm (backhand) axis:</label> 
+			<input type="number" id="mgriBackhand" disabled>
+
+		<hr>
+
+		<h2>Desired MGR/I:</h2>
+			<label>MGRI:</label>
+			<input type="text" id="desiredMgri" value="Enter specs first." oninput="calculateSpecs()" disabled><br>
+			<label>or grip</label>
+
+		<h4>To achieve desired:</h4>
+			<label>Swingweight:</label> 
+			<input type="number" id="adjustedSwingweight" disabled><br>
+			<label>Balance:</label> 
+			<input type="number" id="adjustedBalance" disabled><br>
+			<label>Mass:</label>
+			<input type="number" id="adjustedMass" disabled>
+
+		<script src="MGRI.js"></script>
+	</body>
+</html>

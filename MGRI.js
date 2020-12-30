@@ -25,20 +25,37 @@ function specsForm(){
 
 	if(mgri == 0 || mgri === null || isNaN(mgri)){
 		console.log("Missing info");
+		document.getElementById("mgri").value = "";
+		document.getElementById("mgriBackhand").value = "";
 		document.getElementById("desiredMgri").disabled = true;
 		document.getElementById("desiredMgri").type = "text";
 		document.getElementById("desiredMgri").value = "Enter specs first.";
+		document.getElementById("adjustedSwingweight").value = "";
+		document.getElementById("adjustedBalance").value = "";
+		document.getElementById("adjustedMass").value = "";
+		document.getElementById("chokeValue").disabled = true;
+		document.getElementById("chokeValue").type = "text";
+		document.getElementById("chokeValue").value = "Enter specs first.";
+		document.getElementById("chokeType").disabled = true;
+		document.getElementById("chokeType").value = "chokeType";
+
 	}
 	else {
 		document.getElementById("mgri").value = mgri.toFixed(3);
 		document.getElementById("mgriBackhand").value = mgriBackhand.toFixed(3);
 		document.getElementById("desiredMgri").disabled = false;
 		document.getElementById("desiredMgri").type = "number";
-		calculateSpecs();
+		document.getElementById("chokeValue").disabled = false;
+		document.getElementById("chokeValue").type = "number";
+		document.getElementById("chokeType").disabled = false;
+		document.getElementById("chokeValue").value = 0;
+		desiredMGRI();
+		effectiveMGRI();
+
 	}
 }
 
-function calculateSpecs(){
+function desiredMGRI(){
 	var desiredMgri = parseFloat(document.getElementById("desiredMgri").value);
 
 	var adjustedSwingweight = swingweight;
@@ -51,6 +68,7 @@ function calculateSpecs(){
 
 	if(currentMgri > desiredMgri && (desiredMgri > 18 && desiredMgri < 23)){
 		while(currentMgri > desiredMgri && adjustedSwingweight < 600){
+			// 20.4 20.4
 			adjustedSwingweight = adjustedSwingweight + 1;
 			adjustedBalance = adjustedBalance + (0.1 / 3);
 			adjustedMassKg = adjustedMassKg + (.001 / 3);
@@ -81,4 +99,52 @@ function calculateSpecs(){
 	document.getElementById("adjustedSwingweight").value = Math.round(adjustedSwingweight);
 	document.getElementById("adjustedBalance").value = Math.round(adjustedBalance * 10) / 10;
 	document.getElementById("adjustedMass").value = Math.round(adjustedMassKg * 1000);
+}
+
+function effectiveMGRI(){
+	// Instead of MGR/I
+	// Equation is Mg(R - d)I'
+	// I' = Ic + M(R-d)^2
+	// Ic = sw - M(R-10)^2
+	// IC = moment of inertia around balance point.
+	// chokeUp negative for choke down, positive for choke up.
+	var chokeValue;
+	var mgriAboutAxis;
+
+	chokeValue = document.getElementById("chokeValue").value;
+
+	if(document.getElementById("chokeType").value == "chokeUp" && chokeValue < 0){
+		chokeValue = chokeValue * -1;
+		document.getElementById("chokeValue").value = chokeValue;
+	}
+
+	if(document.getElementById("chokeType").value == "chokeDown" && chokeValue > 0){
+		chokeValue = chokeValue * -1;
+		document.getElementById("chokeValue").value = chokeValue;
+	}
+
+	if(chokeValue < 0){
+		document.getElementById("chokeType").value = "chokeDown";
+	}
+
+	if(chokeValue > 0){
+		document.getElementById("chokeType").value = "chokeUp";
+	}
+
+	if(chokeValue == 0){
+		document.getElementById("chokeType").value = "neutral";
+	}
+
+	/*if(document.getElementById("chokeType").value == "neutral" && chokeValue != 0){
+		chokeValue = 0;
+		document.getElementById("chokeValue").value = chokeValue;
+	}*/
+
+	var ic = swingweight - massKg * Math.pow((balance - 10), 2);
+	var iPrime = ic + massKg * Math.pow((balance - chokeValue), 2);
+
+	mgriAboutAxis = (massKg * gravity * (balance - chokeValue)) / iPrime;
+
+	document.getElementById("startingMGRI").value = mgri.toFixed(3);
+	document.getElementById("effectiveMGRI").value = mgriAboutAxis.toFixed(3);
 }

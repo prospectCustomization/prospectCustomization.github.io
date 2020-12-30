@@ -1,8 +1,16 @@
 body {
 	background-color: white;
+	border: 6px solid gray;
+	margin: 0px; 
+	padding: 6px;
+	box-sizing: border-box; 
+	/* Padding = inside, margin = outside. */
 }
 header {
 	color: black;
+}
+input {
+	width: 100%;
 }
 p {
 	color: blue;

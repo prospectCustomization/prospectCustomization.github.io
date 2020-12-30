@@ -1,0 +1,66 @@
+<html>
+	<head>
+  		<meta name="viewport" content="width=device-width,
+  			initial-scale=1.0">
+  		<link rel="stylesheet" href="MGRI.css">
+	</head>
+	<body>
+
+		<h1 id="header">MGR/I (swing timing) calculations</h1>
+		<form id="racquetSpecs">
+			<h2>Racquet specs:</h2>
+			<label>Swingweight (kg-cm^2):</label>
+			<input type="number" id="swingweight" oninput="specsForm()"><br>
+			<!--min="200" max="450" Min and max only work when submitting the form-->
+			<label>Balance (cm):</label>
+			<input type="number" id="balance" oninput="specsForm()"><br>
+			<label>Mass (g):</label>
+			<input type="number" id="mass" oninput="specsForm()"><br>
+
+		</form>
+
+		<h4>Calculated MGR/I:</h4>
+			<label>0 cm (buttcap) axis:</label> 
+			<input type="number" id="mgri" disabled><br>
+			<label>10 cm (backhand) axis:</label> 
+			<input type="number" id="mgriBackhand" disabled>
+		<h4>Current MR^2:</h4>
+
+
+		<hr>
+
+		<h2>Desired MGR/I:</h2>
+			<label>MGRI:</label>
+			<input type="text" id="desiredMgri" value="Enter specs first." oninput="desiredMGRI()" disabled><br>
+
+		<h4>To achieve desired:</h4>
+			<label>Swingweight:</label> 
+			<input type="number" id="adjustedSwingweight" disabled><br>
+			<label>Balance:</label> 
+			<input type="number" id="adjustedBalance" disabled><br>
+			<label>Mass:</label>
+			<input type="number" id="adjustedMass" disabled>
+
+		<br>
+		<br>
+		<hr>
+
+		<h2>Effective MGRI:</h2>
+			<label>0 cm choke up/down (center of wrist relative to buttcap):</label>
+			<input type="text" id="chokeValue" value="Enter specs first." oninput="effectiveMGRI()" disabled>
+			<select id="chokeType" onchange="effectiveMGRI()" disabled>
+				<option value="chokeType" selected disabled hidden>Choke Type</option>
+				<option value="neutral">Neutral</option>
+    			<option value="chokeUp">Choke Up</option>
+    			<option value="chokeDown">Choke Down</option>
+    		</select>
+    		<br>
+    		<br>
+    		<label>Starting MGRI:</label>
+    		<input type="number" id="startingMGRI" disabled>
+    		<label>Effective MGRI:</label>
+    		<input type="number" id="effectiveMGRI" disabled>
+
+		<script src="MGRI.js"></script>
+	</body>
+</html>

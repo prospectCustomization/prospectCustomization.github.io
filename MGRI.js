@@ -4,6 +4,8 @@ var balance;
 var massGrams;
 var massKg;
 var mgri;
+var recoilWeight;
+var chokeValue;
 const gravity = 980.5;
 
 function specsForm(){
@@ -38,6 +40,8 @@ function specsForm(){
 		document.getElementById("chokeValue").value = "Enter specs first.";
 		document.getElementById("chokeType").disabled = true;
 		document.getElementById("chokeType").value = "chokeType";
+		document.getElementById("frameLength").disabled = true;
+		document.getElementById("pickupWeight").value = "";
 
 	}
 	else {
@@ -49,10 +53,28 @@ function specsForm(){
 		document.getElementById("chokeValue").type = "number";
 		document.getElementById("chokeType").disabled = false;
 		document.getElementById("chokeValue").value = 0;
+		document.getElementById("frameLength").value = 27;
+		document.getElementById("frameLength").disabled = false;
+		otherValues();
 		desiredMGRI();
 		effectiveMGRI();
-
 	}
+}
+
+function otherValues(){
+	// Calculate pickupweight.
+	var pickupWeight = calculatePickupWeight(balance);
+
+	document.getElementById("pickupWeight").value = pickupWeight.toFixed(2);
+
+	recoilWeight = swingweight - massKg * Math.pow((balance - 10), 2);
+	document.getElementById("recoilWeight").value = recoilWeight.toFixed(2);
+
+}
+
+function calculatePickupWeight(localBalance){
+	var localPickupWeight = massKg * Math.pow(localBalance, 2);
+	return localPickupWeight;
 }
 
 function desiredMGRI(){
@@ -104,11 +126,12 @@ function desiredMGRI(){
 function effectiveMGRI(){
 	// Instead of MGR/I
 	// Equation is Mg(R - d)I'
+	// I' = moment of inertia about axis of interest
+	// Ic = moment of inertia about center of mass (Recoilweight)
 	// I' = Ic + M(R-d)^2
 	// Ic = sw - M(R-10)^2
 	// IC = moment of inertia around balance point.
 	// chokeUp negative for choke down, positive for choke up.
-	var chokeValue;
 	var mgriAboutAxis;
 
 	chokeValue = document.getElementById("chokeValue").value;
@@ -122,7 +145,6 @@ function effectiveMGRI(){
 		chokeValue = chokeValue * -1;
 		document.getElementById("chokeValue").value = chokeValue;
 	}
-
 	if(chokeValue < 0){
 		document.getElementById("chokeType").value = "chokeDown";
 	}
@@ -140,11 +162,53 @@ function effectiveMGRI(){
 		document.getElementById("chokeValue").value = chokeValue;
 	}*/
 
-	var ic = swingweight - massKg * Math.pow((balance - 10), 2);
-	var iPrime = ic + massKg * Math.pow((balance - chokeValue), 2);
+	// Calculations for effective MGRI.
+	// Further away because effectiveBalance / effective recoil?
 
-	mgriAboutAxis = (massKg * gravity * (balance - chokeValue)) / iPrime;
+	// Fix input box for this stuff eventually.
+	var tempChokeValue;
+	
+	// Fix for null input.
+	if(chokeValue){
+		tempChokeValue = chokeValue;
+	}
+	else {
+		tempChokeValue = 0;
+	}
+
+	var effectiveBalance = balance - tempChokeValue;
+
+	console.log(effectiveBalance);
+	var iPrime = recoilWeight + massKg * Math.pow((effectiveBalance), 2);
+
+	mgriAboutAxis = (massKg * gravity * (effectiveBalance)) / iPrime;
 
 	document.getElementById("startingMGRI").value = mgri.toFixed(3);
 	document.getElementById("effectiveMGRI").value = mgriAboutAxis.toFixed(3);
+	document.getElementById("chokeValue").value = chokeValue;
+
+	effectiveValues(effectiveBalance);
+}
+
+function effectiveValues(effectiveBalance){
+
+	var frameLength;
+
+	frameLength = document.getElementById("frameLength").value;
+
+	// Calculation for effective length.
+	var effectiveLength = frameLength - (chokeValue * 0.39370);
+
+	document.getElementById("effectiveLength").value = effectiveLength;
+
+	// Calculation for effective balance.
+	document.getElementById("effectiveBalance").value = effectiveBalance; 
+
+	// Effective pickupweight.
+	var pickupWeight = calculatePickupWeight(effectiveBalance);
+	document.getElementById("effectivePickupWeight").value = pickupWeight.toFixed(2);	
+
+	// Calculation for effective swingweight.
+	var effectiveSwingweight = recoilWeight + massKg * Math.pow((effectiveBalance - 10),2);
+	document.getElementById("effectiveSwingweight").value = Math.trunc(effectiveSwingweight);
 }

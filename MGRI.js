@@ -202,13 +202,27 @@ function effectiveValues(effectiveBalance){
 	document.getElementById("effectiveLength").value = effectiveLength;
 
 	// Calculation for effective balance.
-	document.getElementById("effectiveBalance").value = effectiveBalance; 
+	document.getElementById("effectiveBalance").value = effectiveBalance.toFixed(1); 
 
 	// Effective pickupweight.
 	var pickupWeight = calculatePickupWeight(effectiveBalance);
 	document.getElementById("effectivePickupWeight").value = pickupWeight.toFixed(2);	
 
+	// Calculation for reverse swingweight.
+	var reverseSwingweight = swingweight - massKg * Math.pow((balance - 10),2) + 
+		massKg * Math.pow((frameLength * 2.54 - balance - 10),2);
+	document.getElementById("reverseSwingweight").value = reverseSwingweight.toFixed(2);
+
 	// Calculation for effective swingweight.
 	var effectiveSwingweight = recoilWeight + massKg * Math.pow((effectiveBalance - 10),2);
 	document.getElementById("effectiveSwingweight").value = Math.trunc(effectiveSwingweight);
+
+	// Calculation for effective mass.
+	//distance from balance point to point of impact (cm)
+	// Calculate point of impact 2/3 up
+	const standardFrameLengthCm = 68.58;
+	var frameLengthCm = frameLength * 2.54;
+	var pointOfImpactCm = 53.34 + frameLengthCm - standardFrameLengthCm;
+	var effectiveMass = massKg / (1 + massKg * Math.pow(pointOfImpactCm - balance,2) / recoilWeight)
+	document.getElementById("effectiveMass").value = Math.round(effectiveMass * 1000);
 }

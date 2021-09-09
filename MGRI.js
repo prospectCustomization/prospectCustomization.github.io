@@ -213,6 +213,12 @@ function effectiveValues(effectiveBalance){
 		massKg * Math.pow((frameLength * 2.54 - balance - 10),2);
 	document.getElementById("reverseSwingweight").value = reverseSwingweight.toFixed(2);
 
+	// Calculation for handle MGRI.
+	var reverseSwingweightTip = swingweight - massKg * Math.pow((balance - 10),2) + 
+		massKg * Math.pow((frameLength * 2.54 - balance),2);
+	var handleMGRI = (massKg * gravity * balance) / reverseSwingweightTip;
+	document.getElementById("handleMGRI").value = handleMGRI.toFixed(2);
+
 	// Calculation for effective swingweight.
 	var effectiveSwingweight = recoilWeight + massKg * Math.pow((effectiveBalance - 10),2);
 	document.getElementById("effectiveSwingweight").value = Math.trunc(effectiveSwingweight);

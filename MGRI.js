@@ -229,6 +229,14 @@ function effectiveValues(effectiveBalance){
 	document.getElementById("reverseEffectiveSwingweight").value = 
 	reverseEffectiveSwingweight.toFixed(2);
 
+	// Calculation for polarization.
+	var polarization = recoilWeight / massGrams;
+	document.getElementById("polarization").value = polarization.toFixed(4);
+	// Recoilweight10cm
+	// balance - 10.
+
+	var recoilweightMGRI = (massKg * gravity * balance) / recoilWeight;
+	document.getElementById("recoilweightMGRI").value = recoilweightMGRI.toFixed(3);
 
 	// Calculation for effective swingweight.
 	var effectiveSwingweight = recoilWeight + massKg * Math.pow((effectiveBalance - 10),2);
